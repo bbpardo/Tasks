@@ -5,19 +5,15 @@ const lista = [
     },
     {
         taskName: "Comprar el pan",
-        done: true,
-    }
+        done: false,
+    },
 ]
-const newTask = {
-    taskName: "",
-    done: false
-}
 function checklist (taskName, done){
     let completedHTML = done ? "checked" : "";
     const taskHTML = `
     <li>
         <p>${taskName}</p>
-        <input type="checkbox" name="completed" class="checkbutton" ${completedHTML} onchange="updateTasks(this)">
+        <input type="checkbox" name="completed" class="checkbutton" ${completedHTML} onchange="updateStatusTasks(this)">
     </li>
     `;
     return taskHTML
@@ -25,33 +21,25 @@ function checklist (taskName, done){
 function taskListHTML () {
     let HTMLtext = "";
     for ( let item of lista ) {
-        const HTMLelemento = checklist(item.taskName, item.done)
+        const HTMLelemento = checklist(item.taskName, item .done)
         HTMLtext += HTMLelemento;
     }
-    return HTMLtext
+    document.querySelector("#tasksList").innerHTML = HTMLtext
 }
-function insertTasksHTML () {
-    const ul = document.querySelector("#tasksList");
-    ul.innerHTML = taskListHTML();
-}
-function updateNewTask(event){
-    console.log(event.target.value);
-    newTask.taskName =  event.target.value;
-}
-function addTask () {
+function addTaskHandler () {
+    const newTask = {
+        taskName: document.querySelector("#textlist").value,
+        done: false,
+    }
     lista.push(newTask);
-    insertTasksHTML();
+    taskListHTML();
 }
-function updateTasks(target){
-    console.log(target.checked);
+function updateStatusTasks(target){
     if ( target.checked === true ) {
         target.parentElement.classList.add("done")
     } else {
         target.parentElement.classList.remove("done")
     }
-
-    //lista.done = 
 }
-window.addEventListener('load',insertTasksHTML);
-document.querySelector("#textlist").addEventListener("input",updateNewTask);
-document.querySelector("#blist").addEventListener("click", addTask);
+window.addEventListener('load',taskListHTML);
+document.querySelector("#blist").addEventListener("click", addTaskHandler);
